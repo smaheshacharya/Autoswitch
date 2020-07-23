@@ -22,7 +22,7 @@ class App extends React.Component{
   componentDidMount(){
     const localData = localStorage.getItem('items')
     this.setState({
-      items:localData
+      items:JSON.parse(localData)
     })
   }
   handleInput(e){
@@ -39,7 +39,7 @@ class App extends React.Component{
     const newItem = this.state.currentItems;
     if(newItem.text != ""){
       const newItems = [...this.state.items, newItem];
-      // localStorage.setItem('items',JSON.stringify(newItems));
+      localStorage.setItem('items',JSON.stringify(newItems));
       this.setState({
         items:newItems,
         currentItems:{
@@ -52,9 +52,11 @@ class App extends React.Component{
   }
 deleteItem(key){
 const filteredItems = this.state.items.filter(item => item.key !== key);
+localStorage.setItem('items',JSON.stringify(filteredItems));
 this.setState({
   items:filteredItems
 })
+
   }
   render(){
     return(
