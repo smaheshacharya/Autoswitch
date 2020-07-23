@@ -20,10 +20,16 @@ class App extends React.Component{
 
   }
   componentDidMount(){
-    const localData = localStorage.getItem('items')
-    this.setState({
-      items:localData
-    })
+    if(localStorage.getItem('items')){
+    
+    this.setState(
+      {
+        localdata: JSON.parse(localStorage.getItem('items'))
+      
+      }
+    )
+  }
+  console.log("CDM")
   }
   handleInput(e){
     this.setState({
@@ -39,7 +45,6 @@ class App extends React.Component{
     const newItem = this.state.currentItems;
     if(newItem.text != ""){
       const newItems = [...this.state.items, newItem];
-      // localStorage.setItem('items',JSON.stringify(newItems));
       this.setState({
         items:newItems,
         currentItems:{
@@ -52,12 +57,22 @@ class App extends React.Component{
   }
 deleteItem(key){
 const filteredItems = this.state.items.filter(item => item.key !== key);
+localStorage.setItem('items', JSON.stringify(filteredItems));
 this.setState({
   items:filteredItems
 })
   }
+  componentWillUpdate(nextProps, nextState){
+    
+    localStorage.setItem('items',JSON.stringify(nextState.items));
+    console.log("call before update");
+  }
   render(){
     return(
+      <div className="container-fluid">
+        <div className="row">
+
+        
       <div className="App">
       <header>
         <h1 className="heading">Enter your urls</h1>
@@ -71,6 +86,8 @@ this.setState({
         </form>
         
       </header>
+      </div>
+      </div>
       </div>
     );
   }
