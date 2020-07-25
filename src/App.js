@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import ListItems from './ListItems';
+// import Background from './Background';
 
 class App extends React.Component{
   constructor(props){
@@ -20,16 +21,18 @@ class App extends React.Component{
 
   }
   componentDidMount(){
-    if(localStorage.getItem('items')){
-    
-    this.setState(
-      {
-        localdata: JSON.parse(localStorage.getItem('items'))
-      
-      }
-    )
-  }
-  console.log("CDM")
+    // console.log("CDM");
+    if(localStorage.getItem('items')== null)
+    {
+      const localData = null
+    }
+    else{
+      const localData = localStorage.getItem('items');
+      this.setState({
+        items:JSON.parse(localData)
+      })
+    }
+  
   }
   handleInput(e){
     this.setState({
@@ -45,6 +48,7 @@ class App extends React.Component{
     const newItem = this.state.currentItems;
     if(newItem.text != ""){
       const newItems = [...this.state.items, newItem];
+      localStorage.setItem('items',JSON.stringify(newItems));
       this.setState({
         items:newItems,
         currentItems:{
@@ -57,15 +61,19 @@ class App extends React.Component{
   }
 deleteItem(key){
 const filteredItems = this.state.items.filter(item => item.key !== key);
-localStorage.setItem('items', JSON.stringify(filteredItems));
+localStorage.setItem('items',JSON.stringify(filteredItems));
 this.setState({
   items:filteredItems
 })
+
   }
   componentWillUpdate(nextProps, nextState){
     
     localStorage.setItem('items',JSON.stringify(nextState.items));
-    console.log("call before update");
+    // console.log("call before update");
+  }
+  validate = () => {
+    let Emailerror= ""
   }
   render(){
     return(
@@ -76,6 +84,7 @@ this.setState({
       <div className="App">
       <header>
         <h1 className="heading">Enter your urls</h1>
+    {/* <small style="color:red">{this.state.nameError}</small> */}
         <form id="to-do-form" onSubmit={this.addItem}>
         <div className="form-group"><i className="fa fa-chrome"></i>
           <input className="form-control input-sm" type="text" placeholder="Enter url" value={this.state.currentItems.text} 
@@ -83,11 +92,15 @@ this.setState({
           <button type="submit" className="btn btn-sm btn-default">Add</button>
           </div>
           <ListItems items = {this.state.items} deleteItem={this.deleteItem}></ListItems>
+          {/* <Background items = {this.state.items}></Background> */}
         </form>
         
       </header>
       </div>
       </div>
+      <footer className="footer">
+        <small className="small"><a href="https://www.alphateds.com" target="_blank" >&copy; Alphateds Technology</a></small>
+      </footer>
       </div>
     );
   }
